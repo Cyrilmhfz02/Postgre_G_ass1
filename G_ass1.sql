@@ -61,3 +61,22 @@ CREATE TEMP TABLE cust_rent_more_than_10 AS(
 	HAVING COUNT(rent.rental_id)>10
 )
 
+
+--: From the temporary table created in Task 3.1, identify customers who have a Gmail email address (i.e., their email ends with '@gmail.com').
+
+CREATE TEMP TABLE cust_rent_more_than_10 AS
+	SELECT 
+		CONCAT(cust.first_name,' ',cust.last_name) AS full_name,
+		COUNT(rent.rental_id) AS number_of_rental,
+		cust.email as email
+	FROM customer as cust
+	INNER JOIN rental as rent
+	ON rent.customer_id=cust.customer_id
+	GROUP BY CONCAT(cust.first_name,' ',cust.last_name), cust.email
+	HAVING COUNT(rent.rental_id)>10;
+
+
+SELECT *
+FROM cust_rent_more_than_10 
+WHERE email LIKE '%@gmail.com'
+

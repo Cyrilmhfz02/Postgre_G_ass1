@@ -18,3 +18,17 @@ SELECT
 	*
 from CTE_rental
 WHERE numb_film >50
+
+--: Identify the categories of films that have an average rental duration greater than 5 days. 
+--Only consider films rated 'PG' or 'G'.
+	SELECT 
+		cat.name as category,
+		AVG(f.rental_duration) as avrg_rent_dur
+	FROM film as f
+	INNER JOIN public.film_category AS f_cat
+	ON f_cat.film_id=f.film_id
+	INNER JOIN public.category as cat
+	ON cat.category_id=f_cat.category_id
+	WHERE f.rating='PG' OR f.rating='G' 
+	GROUP BY category
+	HAVING AVG(f.rental_duration) >5

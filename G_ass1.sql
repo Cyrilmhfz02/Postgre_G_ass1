@@ -45,3 +45,19 @@ INNER JOIN customer as cust
 ON pay.customer_id=cust.customer_id
 GROUP BY CONCAT(cust.first_name,' ',cust.last_name)
 HAVING SUM(pay.amount) >100
+
+
+--: Create a temporary table containing the names and email addresses of customers who have rented more than 10 films.
+
+CREATE TEMP TABLE cust_rent_more_than_10 AS(
+	SELECT 
+		CONCAT(cust.first_name,' ',cust.last_name) AS full_name,
+		COUNT(rent.rental_id) AS number_of_rental,
+		cust.email
+	FROM customer as cust
+	INNER JOIN rental as rent
+	ON rent.customer_id=cust.customer_id
+	GROUP BY CONCAT(cust.first_name,' ',cust.last_name), cust.email
+	HAVING COUNT(rent.rental_id)>10
+)
+

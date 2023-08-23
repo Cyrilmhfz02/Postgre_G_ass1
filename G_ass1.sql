@@ -32,3 +32,16 @@ WHERE numb_film >50
 	WHERE f.rating='PG' OR f.rating='G' 
 	GROUP BY category
 	HAVING AVG(f.rental_duration) >5
+
+
+--: Determine the total rental amount collected from each customer. 
+--List only those customers who have spent more than $100 in total.
+
+SELECT
+	CONCAT(cust.first_name,' ',cust.last_name) AS full_name,
+	SUM(pay.amount) as sum_amount
+FROM public.payment as pay
+INNER JOIN customer as cust
+ON pay.customer_id=cust.customer_id
+GROUP BY CONCAT(cust.first_name,' ',cust.last_name)
+HAVING SUM(pay.amount) >100

@@ -81,23 +81,31 @@ FROM cust_rent_more_than_10
 WHERE email LIKE '%@gmail.com'
 
 --BIG TASK INCOMING:
---STEP1: Start by creating a CTE that finds the total number of films rented for each category.
-WITH CTE_total_nb_films_rented_per_cat AS(
-	SELECT
-		COUNT (rent.rental_id) AS total_rent,
-		cat.name as category
-		
-	FROM public.film as f
-	INNER JOIN public.inventory as inv
-	ON f.film_id=inv.film_id
-	INNER JOIN public.rental as rent
-	ON inv.inventory_id=rent.inventory_id
-	INNER JOIN public.film_category as f_cat
-	ON f.film_id=f_cat.film_id
-	INNER JOIN public.category as cat
-	ON cat.category_id=f_cat.category_id
-	GROUP BY category
-)
+-- STEP 1: Create a CTE that finds the total number of films rented for each category.
+-- STEP 2: Create a temporary table from this CTE.
+
+CREATE TEMPORARY TABLE temp_cte AS
+	WITH CTE_total_nb_films_rented_per_cat AS (
+		SELECT
+			COUNT(rent.rental_id) AS total_rent,
+			cat.name AS category
+		FROM public.film AS f
+		INNER JOIN public.inventory AS inv 
+		ON f.film_id = inv.film_id
+		INNER JOIN public.rental AS rent 
+		ON inv.inventory_id = rent.inventory_id
+		INNER JOIN public.film_category AS f_cat 
+		ON f.film_id = f_cat.film_id
+		INNER JOIN public.category AS cat 
+		ON cat.category_id = f_cat.category_id
+		GROUP BY 
+			category
+	)
+SELECT
+	category,
+	total_rent
+FROM CTE_total_nb_films_rented_per_cat;
 
 
---STEP2
+SELECT *
+FROM temp_cte

@@ -109,3 +109,12 @@ FROM CTE_total_nb_films_rented_per_cat;
 
 SELECT *
 FROM temp_cte
+
+--STEP 3: Using the temporary table, list the top 5 categories with the highest number of rentals. Ensure the results are in descending order.
+SELECT 
+	category,
+	total_rent
+FROM temp_cte
+ORDER BY 
+	total_rent DESC
+LIMIT 5

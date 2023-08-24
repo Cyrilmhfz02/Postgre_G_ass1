@@ -165,3 +165,27 @@ ON f.film_id=f_cat.film_id
 INNER JOIN public.category as cat
 ON f_cat.category_id=cat.category_id
 WHERE f.replacement_cost >20 AND (cat.name LIKE 'Action' OR cat.name LIKE 'Comedy')
+
+
+--(LEFT JOIN): List all actors who haven't appeared in a film with a rating of 'R'.
+
+WITH CTE_all_actors_in_R AS(
+	SELECT
+		CONCAT (act.first_name,' ',act.last_name) AS actor_full_name,
+		cat.name AS category
+	FROM public.actor AS act
+	INNER JOIN public.film_actor AS f_act
+	ON f_act.actor_id=act.actor_id
+	INNER JOIN public.film_category AS f_cat
+	ON f_act.film_id=f_cat.film_id
+	INNER JOIN category as cat
+	ON f_cat.category_id=cat.category_id
+	WHERE cat.name LIKE 'R'
+)
+
+CTE_actor_not_in_R AS(
+	SELECT 
+	FROM CTE_all_actors_in_R
+	LEFT JOIN 
+
+)

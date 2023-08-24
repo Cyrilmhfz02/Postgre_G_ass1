@@ -189,3 +189,21 @@ CTE_actor_not_in_R AS(
 	LEFT JOIN 
 
 )
+
+--(Multiple INNER JOINs): Find the names and email addresses of customers who rented films directed by a specific actor (let's say, for the sake of this task, that the actor's first name is 'Nick' and last name is 'Wahlberg', although this might not match actual data in the DVD Rental database).
+SELECT
+    cust.first_name,
+    cust.last_name,
+    cust.email
+FROM public.customer AS cust
+INNER JOIN public.rental AS rent
+ON cust.customer_id = rent.customer_id
+INNER JOIN public.inventory AS inv 
+ON rent.inventory_id = inv.inventory_id
+INNER JOIN public.film AS f 
+ON inv.film_id = f.film_id
+INNER JOIN public.film_actor AS f_act 
+ON f.film_id = f_act.film_id
+INNER JOIN public.actor AS act 
+ON f_act.actor_id = act.actor_id
+WHERE a.first_name LIKE 'Nick' AND a.last_name LIKE 'Wahlberg';

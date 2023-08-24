@@ -118,3 +118,30 @@ FROM temp_cte
 ORDER BY 
 	total_rent DESC
 LIMIT 5
+
+
+--: Identify films that have never been rented out. Use a combination of CTE and LEFT JOIN for this task.
+
+WITH CTE_film_rented AS (
+	SELECT
+		DISTINCT inv.film_id AS r_f_id
+	FROM public.rental AS rent
+	INNER JOIN public.inventory AS inv
+	ON rent.inventory_id = inv.inventory_id
+),
+
+CTE_unrented_film AS (
+	SELECT 
+		f.film_id AS u_f_id, 
+		f.title AS u_f_t
+	FROM public.film AS f
+	LEFT OUTER JOIN CTE_film_rented
+	ON CTE_film_rented.r_f_id = f.film_id
+	WHERE 
+		CTE_film_rented.r_f_id IS NULL
+)
+
+SELECT 
+	u_f_id,
+	u_f_t
+FROM CTE_unrented_film;

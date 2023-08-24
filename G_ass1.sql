@@ -145,3 +145,23 @@ SELECT
 	u_f_id,
 	u_f_t
 FROM CTE_unrented_film;
+
+--(INNER JOIN): Find the names of customers who rented films with a replacement cost greater than $20 and 
+--which belong to the 'Action' or 'Comedy' categories.
+
+SELECT
+	f.title,
+	f.replacement_cost AS rep_cost,
+	cat.name
+FROM public.customer AS cust
+INNER JOIN public.rental AS rent
+ON rent.customer_id=cust.customer_id
+INNER JOIN public.inventory AS inv
+ON rent.inventory_id=inv.inventory_id
+INNER JOIN public.film AS f
+ON f.film_id=inv.film_id
+INNER JOIN public.film_category as f_cat
+ON f.film_id=f_cat.film_id
+INNER JOIN public.category as cat
+ON f_cat.category_id=cat.category_id
+WHERE f.replacement_cost >20 AND (cat.name LIKE 'Action' OR cat.name LIKE 'Comedy')
